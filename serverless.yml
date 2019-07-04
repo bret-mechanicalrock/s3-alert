@@ -6,10 +6,16 @@ service:
 # Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
+  # - serverless-hooks-plugin
+  - serverless-iam-roles-per-function
+  - serverless-pseudo-parameters
 
 provider:
   name: aws
   runtime: nodejs10.x
+  region: ${opt:region, 'us-east-1'} # Transcribe isn't in ap-southeast-2
+  memorySize: 128
+  timeout: 300
   stage: ${opt:stage, self:custom.defaultStage}
   profile: ${self:custom.profiles.${self:provider.stage}}
 
@@ -17,6 +23,17 @@ custom:
   defaultStage: dev
   profiles:
     dev: sandbox-bretwaldow-admin
+  common:
+    notificationTopic: ${self:service}-Notifications
+    notificationTopicArn: "arn:aws:sns:#{AWS::Region}:#{AWS::AccountId}:${self:custom.common.notificationTopic}"
+
+  # # serverless plugins:
+  # hooks:
+  #   package:initialize:
+  #     - npm run package
+  pseudoParameters:
+    allowReferences: true
+    skipRegionReplace: true
 
 functions:
   hello:
@@ -25,3 +42,10 @@ functions:
       - http:
           method: get
           path: hello
+
+resources:
+  Resources:
+    SNSTopicMrNotify:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: ${self:custom.common.notificationTopic}

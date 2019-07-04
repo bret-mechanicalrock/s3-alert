@@ -7,12 +7,15 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "serverless-hooks-plugin": "^1.1.0",
+    "serverless-pseudo-parameters": "^2.4.0",
     "source-map-support": "^0.5.10",
     "tsc": "^1.20150623.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.17",
     "@types/node": "^10.12.18",
+    "serverless-iam-roles-per-function": "^2.0.1",
     "serverless-webpack": "^5.2.0",
     "ts-loader": "^5.3.3",
     "typescript": "^3.2.4",
