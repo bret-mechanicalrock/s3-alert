@@ -42,6 +42,31 @@ functions:
       - http:
           method: get
           path: hello
+    environment:
+      NOTIFICATION_TOPIC: ${self:custom.common.notificationTopicArn}
+      NOTIFICATION_TIMEZONE: Australia/Perth
+    onError: ${self:custom.common.notificationTopicArn}
+    # iamRoleStatementsName: ${self:service}-${self:provider.stage}-processVoicemail-lambdaRole
+    iamRoleStatementsName: ${self:custom.common.notificationTopic}
+    iamRoleStatements:
+      # - Effect: Allow
+      #   Action:
+      #     - logs:FilterLogEvents
+      #   Resource: ${self:custom.common.amazonConnectLogGroup}
+      # - Effect: Allow
+      #   Action:
+      #     - transcribe:StartTranscriptionJob
+      #     - transcribe:GetTranscriptionJob
+      #   Resource: "*"
+      # - Effect: Allow
+      #   Action:
+      #     - s3:GetObject
+      #   Resource: "arn:aws:s3:::${self:custom.common.voicemailBucket}/*"
+      - Effect: Allow
+        Action:
+          - sns:Publish
+        Resource:
+          - ${self:custom.common.notificationTopicArn}
 
 resources:
   Resources:
