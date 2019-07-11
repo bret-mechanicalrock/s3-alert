@@ -1,12 +1,9 @@
 service:
-  name: s3-alert
-#app: your-app-name
-#tenant: your-tenant-name
+  name: mr-voicemail
 
 # Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
-  # - serverless-hooks-plugin
   - serverless-iam-roles-per-function
   - serverless-pseudo-parameters
 
@@ -26,42 +23,29 @@ custom:
   common:
     notificationTopic: ${self:service}-Notifications
     notificationTopicArn: "arn:aws:sns:#{AWS::Region}:#{AWS::AccountId}:${self:custom.common.notificationTopic}"
+    voicemailBucket:  ${self:service}-recordings
 
-  # # serverless plugins:
-  # hooks:
-  #   package:initialize:
-  #     - npm run package
   pseudoParameters:
     allowReferences: true
     skipRegionReplace: true
 
 functions:
-  hello:
-    handler: handler.hello
+  s3alert:
+    handler: handler.s3alert
     events:
-      - http:
-          method: get
-          path: hello
+      - s3:
+        bucket: ${self:custom.common.voicemailBucket}
+        event: s3:ObjectCreated:*
     environment:
       NOTIFICATION_TOPIC: ${self:custom.common.notificationTopicArn}
       NOTIFICATION_TIMEZONE: Australia/Perth
     onError: ${self:custom.common.notificationTopicArn}
-    # iamRoleStatementsName: ${self:service}-${self:provider.stage}-processVoicemail-lambdaRole
     iamRoleStatementsName: ${self:custom.common.notificationTopic}
     iamRoleStatements:
-      # - Effect: Allow
-      #   Action:
-      #     - logs:FilterLogEvents
-      #   Resource: ${self:custom.common.amazonConnectLogGroup}
-      # - Effect: Allow
-      #   Action:
-      #     - transcribe:StartTranscriptionJob
-      #     - transcribe:GetTranscriptionJob
-      #   Resource: "*"
-      # - Effect: Allow
-      #   Action:
-      #     - s3:GetObject
-      #   Resource: "arn:aws:s3:::${self:custom.common.voicemailBucket}/*"
+      - Effect: Allow
+        Action:
+          - s3:GetObject
+        Resource: "arn:aws:s3:::${self:custom.common.voicemailBucket}/*"
       - Effect: Allow
         Action:
           - sns:Publish
@@ -74,3 +58,20 @@ resources:
       Type: AWS::SNS::Topic
       Properties:
         TopicName: ${self:custom.common.notificationTopic}
+    S3VoicemailBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.common.voicemailBucket}
+    S3alertLambdaPermissionContainerS3:
+      Type: AWS::Lambda::Permission
+      Properties:
+        FunctionName:
+          "Fn::GetAtt":
+            # - ${self:service}-${self:provider.stage}-s3alert
+            - S3alertLambdaFunction
+            - Arn
+        Principal: "s3.amazonaws.com"
+        Action: "lambda:InvokeFunction"
+        SourceAccount:
+          Ref: AWS::AccountId
+        SourceArn: "arn:aws:s3:::${self:custom.common.voicemailBucket}"
