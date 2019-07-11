@@ -7,13 +7,15 @@ const sns = require('./src/aws/sns');
 // const sns: AWS.SNS = new AWS.SNS({apiVersion: '2006-03-01'});
 
 // const NOTIFICATION_TOPIC = process.env.NOTIFICATION_TOPIC;
-const NOTIFICATION_TOPIC = 'arn:aws:sns:us-east-1:871094195766:s3-alert-Notifications';
+// const NOTIFICATION_TOPIC = 'arn:aws:sns:us-east-1:871094195766:s3-alert-Notifications';
+const NOTIFICATION_TOPIC = 'arn:aws:sns:us-east-1:871094195766:mr-voicemail-Notifications';
 
-export const hello: APIGatewayProxyHandler = async (event, _context) => {
+export const s3alert: APIGatewayProxyHandler = async (event, _context) => {
+// export const hello: APIGatewayProxyHandler = async (event, _context) => {
 
   await sendNotification("The notification");
 
-return {
+  return {
     statusCode: 200,
     body: JSON.stringify({
       message: 'Go Serverless Webpack (Typescript) v1.0! Your function executed successfully!',
