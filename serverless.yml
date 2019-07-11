@@ -86,6 +86,10 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.common.voicemailBucket}
+        NotificationConfiguration:
+          LambdaConfigurations:
+            - Event: s3:ObjectCreated:*
+              Function: "#{S3alertLambdaFunction.Arn}"
     S3alertLambdaPermissionContainerS3:
       Type: AWS::Lambda::Permission
       Properties:
