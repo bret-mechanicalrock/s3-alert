@@ -15,11 +15,17 @@ provider:
   timeout: 300
   stage: ${opt:stage, self:custom.defaultStage}
   profile: ${self:custom.profiles.${self:provider.stage}}
+  tags:
+    Owner: bret.waldow@mechanicalrock.io
+    Purpose: MR Connect voicemailBucket
+    Stack: ${self:custom.profiles.${self:provider.stage}}
 
 custom:
   defaultStage: dev
+
   profiles:
     dev: sandbox-bretwaldow-admin
+
   common:
     notificationTopic: ${self:service}-Notifications
     notificationTopicArn: "arn:aws:sns:#{AWS::Region}:#{AWS::AccountId}:${self:custom.common.notificationTopic}"
@@ -65,11 +71,12 @@ resources:
     S3alertLambdaPermissionContainerS3:
       Type: AWS::Lambda::Permission
       Properties:
-        FunctionName:
-          "Fn::GetAtt":
-            # - ${self:service}-${self:provider.stage}-s3alert
-            - S3alertLambdaFunction
-            - Arn
+        FunctionName: "#{S3alertLambdaFunction.Arn}"
+        # FunctionArn:
+        #   "Fn::GetAtt":
+        #     # - ${self:service}-${self:provider.stage}-s3alert
+        #     - S3alertLambdaFunction
+        #     - Arn
         Principal: "s3.amazonaws.com"
         Action: "lambda:InvokeFunction"
         SourceAccount:
