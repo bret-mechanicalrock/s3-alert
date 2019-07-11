@@ -23,6 +23,24 @@ provider:
 custom:
   defaultStage: dev
 
+  webpack:
+    webpackConfig: 'webpack.config.js'
+    includeModules:
+      forceExclude:
+        - aws-sdk
+      #    - '@aws-cdk/cdk'
+      #  forceInclude:
+      #    - jasmine-core
+      #    - request
+    packager: npm
+    packagerOptions:
+      scripts:
+        - rm -rf node_modules/aws-sdk
+
+  package:
+    excludeDevDependencies: true
+    individually: true
+
   profiles:
     dev: sandbox-bretwaldow-admin
 

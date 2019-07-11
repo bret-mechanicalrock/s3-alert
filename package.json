@@ -13,7 +13,8 @@
     "serverless-hooks-plugin": "^1.1.0",
     "serverless-pseudo-parameters": "^2.4.0",
     "source-map-support": "^0.5.10",
-    "tsc": "^1.20150623.0"
+    "tsc": "^1.20150623.0",
+    "webpack-node-externals": "^1.7.2"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.17",
