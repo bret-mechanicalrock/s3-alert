@@ -66,6 +66,10 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
+          - logs:FilterLogEvents
+        Resource: ${self:custom.common.amazonConnectLogGroup}
+      - Effect: Allow
+        Action:
           - s3:GetObject
         Resource: "arn:aws:s3:::${self:custom.common.voicemailBucket}/*"
       - Effect: Allow
