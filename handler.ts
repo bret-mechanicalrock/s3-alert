@@ -3,6 +3,7 @@ import 'source-map-support/register';
 // import * as async from 'async';
 // import * as AWS from 'aws-sdk';
 const sns = require('./src/aws/sns');
+const voicemail = require('./src/voicemail');
 
 // const sns: AWS.SNS = new AWS.SNS({apiVersion: '2006-03-01'});
 
@@ -12,6 +13,8 @@ const NOTIFICATION_TOPIC = 'arn:aws:sns:us-east-1:871094195766:mr-voicemail-Noti
 
 export const s3alert: APIGatewayProxyHandler = async (event, _context) => {
 // export const hello: APIGatewayProxyHandler = async (event, _context) => {
+
+  await voicemail.process(event);
 
   await sendNotification("The notification");
 
