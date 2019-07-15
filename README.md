@@ -14,3 +14,6 @@ $ npx serverless invoke -f hello
 
 ```
 
+Note:
+    original bucket:
+    connect-b11bdc267949/connect/mr-throw-away/Reports
