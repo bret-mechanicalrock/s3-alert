@@ -9,7 +9,7 @@
   "dependencies": {
     "@types/async": "^3.0.0",
     "async": "^3.1.0",
-    "aws-sdk": "^2.488.0",
+    "aws-sdk": "^2.814.0",
     "serverless-hooks-plugin": "^1.1.0",
     "serverless-pseudo-parameters": "^2.4.0",
     "source-map-support": "^0.5.10",
